@@ -1,0 +1,101 @@
+#!/bin/sh
+
+# check if already running
+test -f /tmp/plock && exit
+
+# create lock file
+echo 1 > /tmp/plock
+
+# change root password
+echo "root:password" | chpasswd 
+
+# uncomment if you cant join wifi (original doesnt support hidden ssid)
+#
+#if [ ! -f /mnt/config/miio/wifi.conf ] ; then
+#  cat << EOF > /tmp/wificfg
+#country=AU
+#ctrl_interface=DIR=/var/run/wpa_supplicant
+#update_config=1
+#
+#network={
+#    scan_ssid=1
+#    ssid=<HEX ENCODED SSID>
+#    psk=<HEX ENCODED KEY>
+#}
+#
+#EOFF
+#  while `test ! -n /mnt/config/miio/wifi.conf` ; do cp /tmp/wificfg /mnt/config/wpa_supplicant.conf ; sleep 0.3 ; done
+#  exit 0
+## exit here and do manual reboot
+#fi
+
+test -f /etc/normal.xml_save || cp /etc/normal.xml /etc/normal.xml_save
+test -f /etc/normal.xml_save || cat << EOF > /etc/normal.xml
+<monitor>
+        <process name="/local/bin/property_service">
+                <arg desc="loglevel option">-i</arg>
+                <arg desc="loglevel 0">/etc/build.prop</arg>
+                <arg desc="data path option">-p</arg>
+                <arg desc="data path">/mnt/config/prop.dat</arg>
+        </process>
+        <process name="/tmp/out/mosquitto">
+                <arg desc="foreground run"></arg>
+        </process>
+        <process name="/tmp/out/camera">
+                <arg desc="bring up by monitor">-M</arg>
+        </process>
+        <process name="/tmp/out/zigbee_agent">
+        <arg desc="bring up by monitor">-f</arg>
+        <arg desc="bring up by monitor">/etc/zigbeeAgent.conf</arg>
+        </process>
+</monitor>
+EOF
+
+test -f /etc/tar_app.sh_save || cp /etc/tar_app.sh /etc/tar_app.sh_save
+test -f /etc/tar_app.sh_save || cat << EOF > /etc/tar_app.sh
+#!/bin/sh
+
+cd /local
+chmod 777 *
+mkdir /tmp/out
+
+if [ -f "app.tar.xz" ]; then
+        tar -xJf app.tar.xz -C /tmp/out
+fi
+
+if [ -f "/sdcard/dontrun" ]; then
+        exit 0
+fi
+
+
+# replace these chinese server IPs with a black hole
+
+sed -i -e 's/4.4.4.4/0.0.0.1/'  -e 's/8.8.8.8/0.0.0.1/'  -e 's/61.220.62.219/127.0.254.254/'  -e 's/203.69.81.91/127.25.25.25/'  -e 's/210.61.248.232/127.25.254.254/'  -e 's/42.99.254.162/127.0.254.254/'  -e 's/50.19.254.134/127.0.254.254/'  -e 's/122.248.234.207/127.254.254.254/'  -e 's/46.137.188.54/127.0.254.254/'  -e 's/61.188.37.216/127.0.254.254/'  -e 's/120.24.59.150/127.25.25.254/'  -e 's/114.215.137.159/127.254.254.254/'  -e 's/104.199.156.58/127.254.254.25/' /tmp/out/camera
+sed -i 's/110.43.34.145/127.25.25.254/' /tmp/out/proxy_server
+
+# patch camera
+# replace annoying logging call with nop
+# ignore miio service and start rtsp server
+# log only appears to be in newer version
+
+mv /tmp/out/camera /tmp/out/camera.1
+hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' | hexdump -R > /tmp/out/camera
+chmod 755 /tmp/out/camera
+rm /tmp/out/camera.1
+EOF
+
+
+test -f /etc/init.d/S91telnetd || cat << EOF > /etc/init.d/S91telnetd
+#!/bin/sh
+telnetd
+# uncomment for no password
+# telnetd -l /bin/sh
+homekit_ntp au.pool.ntp.org
+EOF
+chmod 755 /etc/init.d/S91telnetd
+
+
+if [ ! -f /etc/patched ] ; then
+  echo 1 > /etc/patched
+  reboot
+fi
