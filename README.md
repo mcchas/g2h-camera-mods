@@ -18,7 +18,7 @@ Unlike many other cameras, the UBoot bootloader has no wait / interrupt configur
 # Dumping the firmware
 I tried guessing the password (which locks after 3 incorrect attempts), uBoot was locked and not much in the way of services to probe, I took to reading the SPI flash.
  
-Using a SIOC clip I was unable to reliably dump the firmware with the chip in place, even with a high current power supply. Finding and holding the reset pin on the Mstar SOC might have helped but removing the chip was an easier way.
+Using a SOIC clip I was unable to reliably dump the firmware with the chip in place, even with a high current power supply. Finding and holding the reset pin on the Mstar SOC might have helped but removing the chip was an easier way.
 Once removed the firmware was dumped using flashrom and a Pi Zero and extracted with binwalk.
  
 ![alt text](spi_pads.png "Logo Title Text 1")
