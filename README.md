@@ -99,7 +99,7 @@ Patching this binary is trivial. As I don't want to use any of the Xiaomi/Aqara 
  
 It was harder to find a tool built into the shell that supported raw byte manipulation of these files (the stripped down sed/awk did not, there was no dd). Fortunately the included version of hexdump supported an experimental reverse (-R) function that made this possible. But with a 2MB binary this takes about 15 seconds.
  
-There was also an annoying message filling the logs. I replaced this call with a NOP to stop it spamming.
+There was also an annoying message filling the logs. I replaced this call with a NOP instruction (0xf3af8000) to stop it spamming.
  
 ```bash
 hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' | hexdump -R > /tmp/out/camera
@@ -143,7 +143,7 @@ Input #0, rtsp, from 'rtsp://10.99.99.99/14': 0KB sq=    0B f=0/0
  
 # Do not call home
  
-The binaries include a bunch of chinese IPs and domain names - I am not sure if they are used when Homekit only mode is enabled (my 5 minute from boot traffic traces to indicate they did not). But I removed them anyway, just in case, simply by patching the strings in the binary to point variations of home _127.0.0.1_ and pointing these domain names to localhost also. If you don't want to do this you could also `route <dst> lo` to send the traffic to a black hole.
+The binaries include a bunch of chinese IPs and domain names - I am not sure if they are used when Homekit only mode is enabled (my 5 minute from boot traffic traces indicated they did not). But I removed them anyway, just in case, simply by patching the strings in the binary to point variations of home _127.0.0.1_ and pointing these domain names to localhost also. If you don't want to do this you could also `route <dst> lo` to send the traffic to a black hole.
  
  
 ```bash
@@ -165,11 +165,11 @@ A tool called monitor ensures every process in `/etc/normal.xml` is running. Rem
  
 # Rotating the picture
  
-I have one of these cameras hanging upside down. The rotate function was not. Change `flip = 0` to `flip = 3` in the file `/mnt/config/flash_config.ini`. Generate a new md5sum and replace the last line of the file after the change.
+I have one of these cameras hanging upside down. The rotate function was not available without the Aqara app. Change `flip = 0` to `flip = 3` in the file `/mnt/config/flash_config.ini`. Generate a new md5sum and replace the last line of the file after the change.
  
 # TL;DR
  
-Clone this repo to the root of an SD card. Insert the card, power on the camera. The camera will reboot when it's done and remove the SD card. Or keep it in.. up to you. Use at your own risk.
+Clone this repo to the root of an SD card. Insert the card, power on the camera. The camera will reboot when it's done and remove the SD card. Or keep it in.. up to you. If you do a factory reset, the _save_ files should be manually deleletd to fully reinstall this hack. Use at your own risk.
  
 Unfortunately this will probably be patched when Xiaomi is aware. But as a low risk vulnerability (need physical access to the sd card) it won't be a priority.  If you want to patch your own camera against this hack, just remove /mnt/sdcard from the PATH variable in `/etc/profile`
 
