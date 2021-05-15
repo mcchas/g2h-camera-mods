@@ -29,8 +29,7 @@ echo "root:password" | chpasswd
 ## exit here and do manual reboot
 #fi
 
-test -f /etc/normal.xml_save || cp /etc/normal.xml /etc/normal.xml_save
-test -f /etc/normal.xml_save || cat << EOF > /etc/normal.xml
+test -f /etc/normal.xml_save || cp /etc/normal.xml /etc/normal.xml_save && cat << EOF > /etc/normal.xml
 <monitor>
         <process name="/local/bin/property_service">
                 <arg desc="loglevel option">-i</arg>
@@ -51,8 +50,7 @@ test -f /etc/normal.xml_save || cat << EOF > /etc/normal.xml
 </monitor>
 EOF
 
-test -f /etc/tar_app.sh_save || cp /etc/tar_app.sh /etc/tar_app.sh_save
-test -f /etc/tar_app.sh_save || cat << EOF > /etc/tar_app.sh
+test -f /etc/tar_app.sh_save || cp /etc/tar_app.sh /etc/tar_app.sh_save && cat << EOF > /etc/tar_app.sh
 #!/bin/sh
 
 cd /local
