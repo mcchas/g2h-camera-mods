@@ -107,12 +107,7 @@ hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/6d 69 
  
 And now the process is listening on port 554. And not spamming the logs.
 
-There is a bug when an RTSP connection is started while the camera is in night mode, the IR led/filter would be switched off after a short time after connecting. A bit of digging revealed a function that simply switched off night mode after 6 seconds. 
 
-![image](https://user-images.githubusercontent.com/8325782/124924183-8215e800-e03e-11eb-9550-0c66d15d9680.png)
-
-Using the hexdump + sed + load hack this is "fixed" by replacing the off with another on by flipping the second paramter on L22 from 1 to a 0: `'s/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/'`
- 
 ```bash
 # netstat -anl
 Active Internet connections (servers and established)
@@ -146,6 +141,13 @@ Input #0, rtsp, from 'rtsp://10.99.99.99/14': 0KB sq=    0B f=0/0
 [swscaler @ 0x7fab1e10d000] deprecated pixel format used, make sure you did set range correctly
   2.78 A-V: -0.012 fd=   0 aq=    3KB vq=   85KB sq=    0B f=0/0  
 ```
+
+There is a bug when an RTSP connection is started while the camera is in night mode, the IR led/filter would be switched off after a short time after connecting. A bit of digging revealed a function that simply switched off night mode after 6 seconds. 
+
+![image](https://user-images.githubusercontent.com/8325782/124924183-8215e800-e03e-11eb-9550-0c66d15d9680.png)
+
+Using the hexdump + sed + load hack this is "fixed" by replacing the off with another on by flipping the second paramter on L22 from 1 to a 0: `'s/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/'`
+ 
  
 # Do not call home
  
