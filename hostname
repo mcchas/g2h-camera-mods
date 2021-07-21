@@ -78,7 +78,7 @@ sed -i 's/110.43.34.145/127.25.25.254/' /tmp/out/proxy_server
 # 4. fix issue with IR led + filter turning off over RTSP
 
 mv /tmp/out/camera /tmp/out/camera.1
-hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' -e 's/6d 69 69 6f 5f 74 61 73/72 74 73 70 5f 74 61 73/' | hexdump -R > /tmp/out/camera
+hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' -e 's/00 00 00  6d 69 69 6f 5f 74 61 73/00 00 00  72 74 73 70 5f 74 61 73/' | hexdump -R > /tmp/out/camera
 chmod 755 /tmp/out/camera
 rm /tmp/out/camera.1
 EOF
