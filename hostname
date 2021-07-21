@@ -72,12 +72,13 @@ sed -i -e 's/4.4.4.4/0.0.0.1/'  -e 's/8.8.8.8/0.0.0.1/'  -e 's/61.220.62.219/127
 sed -i 's/110.43.34.145/127.25.25.254/' /tmp/out/proxy_server
 
 # patch camera
-# replace annoying logging call with nop
-# ignore miio service and start rtsp server
-# log only appears to be in newer version
+# 1. replace annoying logging call with nop (log only appears to be in newer version)
+# 2. ignore miio service and start rtsp server
+# 3. ignore miio service and start rtsp server (2.2.1)
+# 4. fix issue with IR led + filter turning off over RTSP
 
 mv /tmp/out/camera /tmp/out/camera.1
-hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' | hexdump -R > /tmp/out/camera
+hexdump -vC /tmp/out/camera.1 | sed -e 's/e3 f7 65 ff/f3 af 80 00/' -e 's/20 46 01 21 bd e8 38 40/20 46 00 21 bd e8 38 40/' -e 's/6d 69 69 6f 5f 74 61 73  6b 00 00 00/72 74 73 70 5f 74 61 73  6b 00 00 00/' -e 's/6d 69 69 6f 5f 74 61 73/72 74 73 70 5f 74 61 73/' | hexdump -R > /tmp/out/camera
 chmod 755 /tmp/out/camera
 rm /tmp/out/camera.1
 EOF
