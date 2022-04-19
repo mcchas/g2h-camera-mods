@@ -2,7 +2,7 @@
  
 This camera supports Homekit Secure Video for a reasonable price - but it has a couple of things that needed fixing.
  
-These steps modify the G2H camera to enable RTSP, telnet, lock a few things down and not to call home. To undo these changes you should be able to do a factory reset as two full (A/B) images are stored in the SPI flash - though I have not tested this.
+These steps modify the G2H camera to enable RTSP, telnet, lock a few things down and not to call home. ~~To undo these changes you should be able to do a factory reset as two full (A/B) images are stored in the SPI flash - though I have not tested this.~~
  
 # Accessing serial console
 Conveniently the USB port exposes a 3.3v TTL serial console on the D- and D+ pins. You don't even need to open the case! I spliced an old USB cable to provide the 5V input and also interface to a 3.3v FTDI adapter.
@@ -176,6 +176,8 @@ A tool called monitor ensures every process in `/etc/normal.xml` is running. Rem
 I have one of these cameras hanging upside down. The rotate function was not available without the Aqara app. Change `flip = 0` to `flip = 3` in the file `/mnt/config/flash_config.ini`. Generate a new md5sum and replace the last line of the file after the change.
  
 # TL;DR
+
+**_Note this is a hack and you risk locking yourself out! If doubt don't use this! Check the issues page for some detailed adventures of things that can go wrong._**
  
 Clone this repo to the root of an SD card. Insert the card, power on the camera. The camera will reboot when it's done and remove the SD card. Or keep it in.. up to you. If you do a factory reset, the _save_ files should be manually deleletd to fully reinstall this hack. Use at your own risk.
  
