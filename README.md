@@ -179,7 +179,9 @@ I have one of these cameras hanging upside down. The rotate function was not ava
 
 **_Note this is a hack and you risk locking yourself out! If doubt don't use this! Check the issues page for some detailed adventures of things that can go wrong._**
  
-Clone this repo to the root of an SD card. Insert the card, power on the camera. The camera will reboot when it's done and remove the SD card. Or keep it in.. up to you. If you do a factory reset, the _save_ files should be manually deleletd to fully reinstall this hack. Use at your own risk.
+Clone this repo to the root of an SD card. Insert the card, power on the camera. The camera will reboot when it's done and remove the SD card. Or keep it in.. up to you. 
+
+To reverse the hack, the backup _save_ files can be manually restored to their original location by following the actions in the script. Use at your own risk.
  
 Unfortunately this will probably be patched when Xiaomi is aware. But as a low risk vulnerability (need physical access to the sd card) it won't be a priority.  If you want to patch your own camera against this hack, just remove /mnt/sdcard from the PATH variable in `/etc/profile`
 
