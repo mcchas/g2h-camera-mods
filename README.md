@@ -5,7 +5,7 @@ This camera supports Homekit Secure Video for a reasonable price - but it has a 
 These steps modify the G2H camera to enable RTSP, telnet, lock a few things down and not to call home. ~~To undo these changes you should be able to do a factory reset as two full (A/B) images are stored in the SPI flash - though I have not tested this.~~
  
 # Accessing serial console
-Conveniently the USB port exposes a 3.3v TTL serial console on the D- and D+ pins. You don't even need to open the case! I spliced an old USB cable to provide the 5V input and also interface to a 3.3v FTDI adapter.
+Conveniently the USB port exposes a 3.3v UART on the D- and D+ pins. You don't even need to open the case! I spliced an old USB cable to provide the 5V input and also interface to a 3.3v FTDI adapter.
  
 ![alt text](usb_splice.png "Logo Title Text 1")
  
